@@ -1,12 +1,8 @@
 {
   "expo": {
-    "name": "notebookApp",
-    "slug": "notebookApp",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "name": "NoteBook",
+    "slug": "NoteBook",
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,11 +14,13 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "versionCode": 1,
+      "package": "yovel.notebook.com"
     }
   }
 }
