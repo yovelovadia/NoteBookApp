@@ -1,5 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  ImageBackground,
+  ActivityIndicator,
+} from "react-native";
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import { Logged } from "../types/types";
@@ -8,8 +14,9 @@ const colors = require("../../colors.json");
 var parsedInfo: string[];
 var res: string | null;
 
-const HomeScreen: React.FC = ({ navigation }) => {
-  const [logged, setLogged] = useState<Logged | null>(null);
+const HomeScreen: React.FC = ({ route, navigation }) => {
+  const [logged, setLogged] = useState<Logged | null | boolean>(null);
+  const navigated: undefined | string = route.params;
 
   useEffect(() => {
     const checkLogged = async (): Promise<any> => {
@@ -20,10 +27,12 @@ const HomeScreen: React.FC = ({ navigation }) => {
           `http://notebook-23.herokuapp.com/api/users/${parsedInfo[0]}`
         );
         setLogged({ name: data.data, _id: parsedInfo[0], jwt: parsedInfo[1] });
+      } else {
+        setLogged(false);
       }
     };
     checkLogged();
-  });
+  }, [navigated]);
 
   const goToNotes = (): void => {
     navigation.navigate("Notes", logged);
@@ -31,7 +40,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
 
   const logOut = async (): Promise<any> => {
     await AsyncStorage.clear();
-    setLogged(null);
+    setLogged(false);
   };
 
   return (
@@ -41,7 +50,7 @@ const HomeScreen: React.FC = ({ navigation }) => {
     >
       <Text style={styles.logo}>NoteBook</Text>
 
-      {logged ? (
+      {logged === null ? null : logged ? (
         <View style={styles.buttonsContainer}>
           <Text style={styles.button} onPress={goToNotes}>
             Your notes

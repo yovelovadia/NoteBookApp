@@ -12,7 +12,7 @@ const TextInputComp: React.FC<InputProps> = (props) => {
         placeholder={props.placeholder}
         onChangeText={props.onChangeText}
         secureTextEntry={props.secureTextEntry}
-        keyboardType={props.keyboardType} /// learn about enums for this problem
+        keyboardType={props.keyboardType}
       />
     </View>
   );

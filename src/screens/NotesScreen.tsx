@@ -2,12 +2,10 @@ import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
-  View,
   ImageBackground,
   ScrollView,
-  Animated,
+  ActivityIndicator,
 } from "react-native";
-import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";
 import NoteComp from "../components/NoteComp";
 import { useHeaderHeight } from "@react-navigation/stack";
@@ -19,7 +17,7 @@ var token: string;
 
 const NotesScreen: React.FC = ({ route }) => {
   const [notes, setNotes] = useState<null | any[]>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [activityIndicator, setActivityIndicator] = useState<boolean>(true);
   const [refresh, setRefresh] = useState<boolean>(true);
 
   headerHeight = useHeaderHeight();
@@ -38,7 +36,7 @@ const NotesScreen: React.FC = ({ route }) => {
       setNotes(data.data);
     };
     getNotes().then(() => {
-      setIsLoading(false);
+      setActivityIndicator(false);
     });
   }, [userId, refresh]);
 
@@ -49,6 +47,7 @@ const NotesScreen: React.FC = ({ route }) => {
 
   const newNote = async (): Promise<any> => {
     //creating new note and deleting those who are empty
+    setActivityIndicator(true);
     const data = {
       userId,
       token: `bearer ${token}`,
@@ -58,11 +57,10 @@ const NotesScreen: React.FC = ({ route }) => {
       .delete("https://notebook-23.herokuapp.com/api/notes/delete-notes")
       .catch((err) => console.log(err));
 
-    axios
-      .post("https://notebook-23.herokuapp.com/api/notes/add-note", {
-        params: data,
-      })
-      .then((res) => refreshComponent);
+    await axios.post("https://notebook-23.herokuapp.com/api/notes/add-note", {
+      params: data,
+    });
+    refreshComponent();
   };
 
   return (
@@ -71,7 +69,9 @@ const NotesScreen: React.FC = ({ route }) => {
       style={styles.container}
     >
       <ScrollView style={{ marginTop: headerHeight }}>
-        {isLoading ? <Text style={styles.loading}>Loading...</Text> : null}
+        {activityIndicator ? (
+          <ActivityIndicator color={"white"} size={80} />
+        ) : null}
 
         {notes
           ? notes.map((note) => (
@@ -112,12 +112,5 @@ const styles = StyleSheet.create({
     backgroundColor: colors.LIGHT_BLUE,
     color: "white",
     borderColor: colors.DARK_BLUE,
-  },
-
-  loading: {
-    fontSize: 50,
-    textAlign: "center",
-    color: "white",
-    marginTop: 100,
   },
 });

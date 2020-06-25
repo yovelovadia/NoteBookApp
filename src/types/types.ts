@@ -9,7 +9,7 @@ export interface InputProps {
   icon: string;
   onChangeText: (res: string) => void | undefined;
   secureTextEntry?: boolean;
-  keyboardType?: undefined | string;
+  keyboardType?: any;
 }
 
 export interface ModalProps {
@@ -30,4 +30,9 @@ export interface Logged {
   jwt: string;
   _id: string;
   name: string;
+}
+
+export interface response {
+  responseWords: string;
+  ActivityIndicator: boolean;
 }

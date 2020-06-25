@@ -36,11 +36,11 @@ const NoteComp: React.FC<NotesProps> = (props) => {
 
   const deleteNote = async (): Promise<any> => {
     // deleting a note (trash icon)
-    console.log('yaani deleted  ',props.note)
     await axios.delete(
-      `https://notebook-23.herokuapp.com/api/notes/${props.note._id}` 
+      `http://notebook-23.herokuapp.com/api/notes/${props.note._id}`
     );
-    props.refreshComponent;
+    setModalIsVisible(false);
+    props.refreshComponent();
   };
 
   const modalStateChange = (): void => {
